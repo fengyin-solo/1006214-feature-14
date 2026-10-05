@@ -10,6 +10,8 @@ const Gate = () => import('@/views/gate/index.vue')
 const Seepage = () => import('@/views/seepage/index.vue')
 const Displacement = () => import('@/views/displacement/index.vue')
 const Trashrack = () => import('@/views/trashrack/index.vue')
+const TrashrackCleaning = () => import('@/views/trashrack-cleaning/index.vue')
+const TrashrackHistory = () => import('@/views/trashrack-history/index.vue')
 const Overhaul = () => import('@/views/overhaul/index.vue')
 const Bearing = () => import('@/views/bearing/index.vue')
 const Cooling = () => import('@/views/cooling/index.vue')
@@ -34,6 +36,8 @@ const router = createRouter({
     { path: '/seepage', name: 'seepage', component: Seepage },
     { path: '/displacement', name: 'displacement', component: Displacement },
     { path: '/trashrack', name: 'trashrack', component: Trashrack },
+    { path: '/trashrack-cleaning', name: 'trashrack-cleaning', component: TrashrackCleaning },
+    { path: '/trashrack-history', name: 'trashrack-history', component: TrashrackHistory },
     { path: '/overhaul', name: 'overhaul', component: Overhaul },
     { path: '/bearing', name: 'bearing', component: Bearing },
     { path: '/cooling', name: 'cooling', component: Cooling },

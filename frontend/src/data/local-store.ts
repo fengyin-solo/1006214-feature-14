@@ -2,7 +2,11 @@ import { SEED_ROWS } from './seed'
 import type { EntryRow } from './types'
 
 // 本地持久化：数据放在 localStorage 里，刷新、关掉再打开都还在。
-const STORAGE_KEY = 'hydropower-plant-om:entries'
+// v2：拦污栅台账改为真实业务数据，并新增历史清污记录键（v1 是占位样例）。
+const STORAGE_KEY = 'hydropower-plant-om:entries:v2'
+
+// 历史清污记录独立存储，与台账共用同一个持久化对象。
+export const CLEANING_HISTORY_KEY = 'trashrack-history'
 
 function clone<T>(value: T): T {
   return JSON.parse(JSON.stringify(value)) as T
