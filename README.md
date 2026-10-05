@@ -51,6 +51,26 @@ npm run build
 | 渗流监测 | `seepage` | 渗流测点 | 测点编号、测点位置、测压管水位 |
 | 位移监测 | `displacement` | 位移测点 | 测点编号、测点高程、水平位移 |
 | 拦污栅 | `trashrack` | 拦污栅 | 栅体编号、所属机组、前后压差 |
+
+### 拦污栅清污专题（三页共用同一份数据）
+
+| 页面 | 路由 | 说明 |
+| --- | --- | --- |
+| 拦污栅台账 | `/trashrack` | 压差、清污次数、状态流转与现场实测 CSV 导入的唯一入口 |
+| 清污次序 | `/trashrack/priority` | 按机组铺开的清污对照表，按压差从大到小排优先次序，支持按机组筛选、另存 CSV |
+| 清污概览 | `/trashrack/overview` | 超限栅体、清污待办、机组分布与清污条数的关键条目概览 |
+
+清污专题的取值约定：
+
+- 压差与清污次数只认拦污栅台账（localStorage 里 `trashrack` / `trashrackLog` 两份数据），
+  三个页面都经 `src/data/trashrack-service.ts` 读取，台账确认完成清污后次序、次数、概览同步变化。
+- 历史清污记录按清理日期时间顺序补录；早期只登记清理人、没登记清污方式的，统一补为
+  「人工清污」，理由（早期以人工作业为主）写入该条记录备注，来源标为「历史台账补录」。
+- 台账清污次数与清污记录逐条对账；没有清污记录的栅体保留一行并在备注/页面写明「无清污记录」。
+- 人工台账与现场实测两条路径打架时，**以现场实测为准**并把台账值统一成实测值；
+  重复导入（同栅体同清理日期）只保留一次，不会多出一行。
+- 另存清污次序的行数与页面栅体总数一致（含无记录说明行与已损坏栅体行）。
+- 压差上限默认 2.00 m，可随台账「压差上限」字段调整；超限栅体单独高亮并显示上次清理日期。
 | 机组检修 | `overhaul` | 检修工作票 | 工作票号、检修机组、检修级别 |
 | 导轴承 | `bearing` | 导轴承 | 轴承编号、所属机组、上导温度 |
 | 技术供水 | `cooling` | 供水系统 | 系统编号、供水类型、供水压力 |
@@ -65,8 +85,9 @@ npm run build
 ## 约定
 
 - 每个模块的页面在 `frontend/src/views/<模块>/index.vue`，页面只负责渲染，读写统一走
-  `frontend/src/api/local-service.ts`。
+  `frontend/src/api/local-service.ts`。拦污栅清污专题的台账、次序、概览三页改走
+  `frontend/src/data/trashrack-service.ts`，保证压差与清污次数跨页面同值。
 - 字段、状态、动作与流转目标集中在 `frontend/src/data/modules.ts`；示例数据在
   `frontend/src/data/seed.ts`。
-- 状态流转只允许在 `local-service.ts` 里改，页面组件不做业务判断。
-- 想回到初始数据：清掉浏览器里 `hydropower-plant-om:entries` 这一项，或调用 `resetModule(模块)`。
+- 状态流转只允许在服务层（`local-service.ts` 或 `trashrack-service.ts`）里改，页面组件不做业务判断。
+- 想回到初始数据：清掉浏览器里 `hydropower-plant-om:entries:v2` 这一项，或调用 `resetModule(模块)`。
